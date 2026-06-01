@@ -376,22 +376,6 @@ with tab4:
     st.caption("Contexto → Necesidad → Problema → Solución")
     st.divider()
 
-    st.markdown("### Resumen comparativo — las 4 temporadas")
-    df_show = df[[
-        'temporada','liga_goles_a_favor','liga_goles_en_contra','liga_puntos',
-        'liga_posicion','liga_titulo',
-        'ucl_goles_a_favor','ucl_goles_en_contra','ucl_partidos',
-        'ucl_fase','ucl_eliminado_por','ucl_titulo','mbappe'
-    ]].copy()
-    df_show.columns = [
-        'Temporada','Liga GF','Liga GC','Puntos','Pos.',
-        'Título Liga','UCL GF','UCL GC','UCL Partidos',
-        'UCL Fase','Eliminado por','Título UCL','Mbappé'
-    ]
-    st.dataframe(df_show, use_container_width=True, hide_index=True)
-    
-    st.divider()
-
     avg_pts_sin  = sin['liga_puntos'].mean()
     avg_pts_con  = con['liga_puntos'].mean()
     avg_enc_sin  = sin['liga_goles_en_contra'].mean()
