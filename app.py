@@ -122,105 +122,105 @@ with tab1:
 
     st.markdown("### ¿Qué tan bueno era el Madrid antes de Mbappé?")
 
-col1, col2 = st.columns(2)
-
-with col1:
-
-    st.markdown("#### Rendimiento en LaLiga")
-
-    fig_pts = go.Figure()
-
-    fig_pts.add_trace(go.Bar(
+    col1, col2 = st.columns(2)
+    
+    with col1:
+    
+        st.markdown("#### Rendimiento en LaLiga")
+    
+        fig_pts = go.Figure()
+    
+        fig_pts.add_trace(go.Bar(
+            x=temporadas_antes,
+            y=puntos_antes,
+            marker_color=[GRIS, ORO],
+            text=puntos_antes,
+            textposition="outside"
+        ))
+    
+        fig_pts.update_layout(
+            yaxis=dict(
+                title="Puntos",
+                range=[0,110],
+                gridcolor="#E2E8F0"
+            ),
+            plot_bgcolor="white",
+            paper_bgcolor="white",
+            showlegend=False,
+            height=320
+        )
+    
+        st.plotly_chart(fig_pts, use_container_width=True)
+    
+        st.caption(
+            "El Madrid pasó de 78 a 95 puntos y conquistó LaLiga."
+        )
+    
+    with col2:
+    
+        st.markdown("#### Solidez defensiva")
+    
+        fig_gc = go.Figure()
+    
+        fig_gc.add_trace(go.Bar(
+            x=temporadas_antes,
+            y=goles_contra_antes,
+            marker_color=[GRIS, VERDE],
+            text=goles_contra_antes,
+            textposition="outside"
+        ))
+    
+        fig_gc.update_layout(
+            yaxis=dict(
+                title="Goles encajados",
+                range=[0,45],
+                gridcolor="#E2E8F0"
+            ),
+            plot_bgcolor="white",
+            paper_bgcolor="white",
+            showlegend=False,
+            height=320
+        )
+    
+        st.plotly_chart(fig_gc, use_container_width=True)
+    
+        st.caption(
+            "La defensa mejoró considerablemente en la temporada campeona."
+        )
+    
+    st.divider()
+    
+    st.markdown("#### Rendimiento en Champions League")
+    
+    fig_ucl = go.Figure()
+    
+    fig_ucl.add_trace(go.Bar(
         x=temporadas_antes,
-        y=puntos_antes,
+        y=fases_antes,
         marker_color=[GRIS, ORO],
-        text=puntos_antes,
+        text=textos_fase,
         textposition="outside"
     ))
-
-    fig_pts.update_layout(
+    
+    fig_ucl.update_layout(
         yaxis=dict(
-            title="Puntos",
-            range=[0,110],
-            gridcolor="#E2E8F0"
+            tickvals=[1,2,3,4,5],
+            ticktext=[
+                "Octavos",
+                "Cuartos",
+                "Semifinal",
+                "Final",
+                "Campeón"
+            ],
+            range=[0,6]
         ),
         plot_bgcolor="white",
         paper_bgcolor="white",
         showlegend=False,
-        height=320
+        height=350
     )
 
-    st.plotly_chart(fig_pts, use_container_width=True)
-
-    st.caption(
-        "El Madrid pasó de 78 a 95 puntos y conquistó LaLiga."
-    )
-
-with col2:
-
-    st.markdown("#### Solidez defensiva")
-
-    fig_gc = go.Figure()
-
-    fig_gc.add_trace(go.Bar(
-        x=temporadas_antes,
-        y=goles_contra_antes,
-        marker_color=[GRIS, VERDE],
-        text=goles_contra_antes,
-        textposition="outside"
-    ))
-
-    fig_gc.update_layout(
-        yaxis=dict(
-            title="Goles encajados",
-            range=[0,45],
-            gridcolor="#E2E8F0"
-        ),
-        plot_bgcolor="white",
-        paper_bgcolor="white",
-        showlegend=False,
-        height=320
-    )
-
-    st.plotly_chart(fig_gc, use_container_width=True)
-
-    st.caption(
-        "La defensa mejoró considerablemente en la temporada campeona."
-    )
-
-st.divider()
-
-st.markdown("#### Rendimiento en Champions League")
-
-fig_ucl = go.Figure()
-
-fig_ucl.add_trace(go.Bar(
-    x=temporadas_antes,
-    y=fases_antes,
-    marker_color=[GRIS, ORO],
-    text=textos_fase,
-    textposition="outside"
-))
-
-fig_ucl.update_layout(
-    yaxis=dict(
-        tickvals=[1,2,3,4,5],
-        ticktext=[
-            "Octavos",
-            "Cuartos",
-            "Semifinal",
-            "Final",
-            "Campeón"
-        ],
-        range=[0,6]
-    ),
-    plot_bgcolor="white",
-    paper_bgcolor="white",
-    showlegend=False,
-    height=350
-)
-
-st.plotly_chart(fig_ucl, use_container_width=True)
+    st.plotly_chart(fig_ucl, use_container_width=True)
     st.markdown(f"""
 <div style="background:#FFFAF0; border-left:4px solid {ORO};
             border-radius:6px; padding:1rem 1.5rem;">
