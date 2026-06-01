@@ -1,0 +1,86 @@
+/* ==========================
+   Layout general
+========================== */
+
+.block-container {
+    padding-top: 1.5rem;
+    max-width: 1400px;
+}
+
+/* ==========================
+   Métricas Streamlit
+========================== */
+
+[data-testid="stMetricValue"] {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+[data-testid="stMetricLabel"] {
+    font-weight: 600;
+}
+
+/* ==========================
+   Tabs
+========================== */
+
+.stTabs [data-baseweb="tab-list"] {
+    gap: 8px;
+}
+
+.stTabs [data-baseweb="tab"] {
+    background-color: #F0F0EE;
+    border-radius: 8px 8px 0 0;
+    padding: 8px 20px;
+    font-weight: 600;
+}
+
+.stTabs [aria-selected="true"] {
+    background-color: #1A1A2E !important;
+    color: white !important;
+}
+
+/* ==========================
+   Headers
+========================== */
+
+h1, h2, h3 {
+    font-weight: 700;
+}
+
+/* ==========================
+   Dataframe
+========================== */
+
+[data-testid="stDataFrame"] {
+    border-radius: 10px;
+}
+
+/* ==========================
+   Alertas e info
+========================== */
+
+[data-testid="stInfo"] {
+    border-radius: 10px;
+}
+
+[data-testid="stSuccess"] {
+    border-radius: 10px;
+}
+
+/* ==========================
+   Separadores
+========================== */
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* ==========================
+   Plotly
+========================== */
+
+.js-plotly-plot {
+    border-radius: 10px;
+}
