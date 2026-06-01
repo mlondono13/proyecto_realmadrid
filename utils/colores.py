@@ -1,0 +1,6 @@
+BLANCO  = "#F5F5F5"
+ORO     = "#C9A84C"
+AZUL_RM = "#1A1A2E"
+ROJO    = "#C81D25"
+VERDE   = "#1D9E75"
+GRIS    = "#B4B2A9"
