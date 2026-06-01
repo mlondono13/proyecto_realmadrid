@@ -124,14 +124,12 @@ with tab1:
             textposition='outside',
             hovertemplate="<b>%{x}</b><br>%{y} puntos<extra></extra>"
         ))
-        fig_pts.update_layout(
-            **LAYOUT_BASE,
-            height=300
-        )
-        
-        fig_pts.update_yaxes(
-            range=[0,110],
-            title="Puntos"
+        LAYOUT_BASE = dict(
+            plot_bgcolor="white",
+            paper_bgcolor="white",
+            margin=dict(l=20, r=20, t=40, b=40),
+            font=dict(family="Arial, sans-serif"),
+            xaxis=dict(showgrid=False)
         )
         st.plotly_chart(fig_pts, use_container_width=True)
         st.caption("Variable discreta → barras separadas")
