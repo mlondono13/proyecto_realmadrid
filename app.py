@@ -126,13 +126,12 @@ with tab1:
         ))
         fig_pts.update_layout(
             **LAYOUT_BASE,
-            height=300,
-            yaxis=dict(range=[0, 110], showgrid=True, gridcolor="#E2E8F0", title="Puntos"),
-            annotations=[dict(
-                x=1, y=1.08, xref='paper', yref='paper',
-                text="🟡 2023-24: Temporada campeona",
-                showarrow=False, font=dict(size=10, color=ORO)
-            )]
+            height=300
+        )
+        
+        fig_pts.update_yaxes(
+            range=[0,110],
+            title="Puntos"
         )
         st.plotly_chart(fig_pts, use_container_width=True)
         st.caption("Variable discreta → barras separadas")
