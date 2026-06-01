@@ -204,17 +204,6 @@ with tab1:
         fig_ucl_gc.update_layout(height=300, yaxis=dict(range=[0, 35], title="Goles"))
         st.plotly_chart(fig_ucl_gc, use_container_width=True)
 
-    st.markdown(f"""
-<div style="background:#FFFAF0; border-left:4px solid {ORO};
-            border-radius:6px; padding:1rem 1.5rem; margin-top:1rem;">
-    <p style="color:#744210; font-size:0.9rem; margin:0; line-height:1.7;">
-        <strong>Lectura:</strong> En 2023-24 el Madrid fue casi perfecto — 1 sola derrota en LaLiga,
-        13 partidos invicto en Champions ganando la final. La pregunta que nadie hizo fue:
-        <em>¿qué problema había que resolver?</em>
-    </p>
-</div>
-""", unsafe_allow_html=True)
-
 
 # ==========================================================================
 # TAB 2 — ¿HABÍA PROBLEMA DE GOL?
@@ -224,7 +213,6 @@ with tab2:
     st.caption("La hipótesis que justificó el fichaje — vs. la realidad de los datos")
     st.divider()
 
-    # REORGANIZADO: Una gráfica encima de la otra (Complementarias por competición)
     st.markdown("### Volumen ofensivo histórico y actual")
     
     st.markdown("#### LaLiga — Goles anotados")
@@ -295,55 +283,66 @@ with tab3:
 
     st.divider()
     
-    # COMPARATIVA DIRECTA: Goles encajados Liga vs UCL (LADO A LADO)
-    st.markdown("### El Impacto Negativo — Goles Encajados (Comparativo)")
-    col1, col2 = st.columns(2)
+    # REORGANIZADO: Goles encajados uno encima del otro (LaLiga arriba, Champions abajo)
+    st.markdown("### El Impacto Negativo — Goles Encajados por Competición")
+    
+    st.markdown("#### Goles encajados en LaLiga")
+    col_e = color_mbappe(df['mbappe'], color_con=ROJO)
+    fig_enc = go.Figure(go.Bar(
+        x=df['temporada'], y=df['liga_goles_en_contra'], marker_color=col_e,
+        text=df['liga_goles_en_contra'], textposition='outside'
+    ))
+    fig_enc.add_hline(y=sin['liga_goles_en_contra'].mean(), line_dash="dash", line_color=VERDE,
+                      annotation_text=f"Promedio sin Mbappé: {sin['liga_goles_en_contra'].mean():.0f}")
+    fig_enc.add_annotation(
+        x='2024-25', y=37, text="<b>+43% vs temporada<br>campeona 2023-24</b>",
+        showarrow=True, arrowhead=2, arrowcolor=ROJO, ax=60, ay=-50, font=dict(color=ROJO, size=10),
+        bgcolor="#FFF5F5", bordercolor=ROJO, borderwidth=1
+    )
+    fig_enc.update_layout(LAYOUT_BASE)
+    fig_enc.update_layout(height=280, yaxis=dict(range=[0, 50], title="Goles encajados"), showlegend=False)
+    st.plotly_chart(fig_enc, use_container_width=True)
+    st.caption("Aumento drástico en la cantidad de goles recibidos localmente tras la reestructuración del ataque.")
 
-    with col1:
-        st.markdown("#### Goles encajados en LaLiga")
-        col_e = color_mbappe(df['mbappe'], color_con=ROJO)
-        fig_enc = go.Figure(go.Bar(
-            x=df['temporada'], y=df['liga_goles_en_contra'], marker_color=col_e,
-            text=df['liga_goles_en_contra'], textposition='outside'
-        ))
-        fig_enc.add_hline(y=sin['liga_goles_en_contra'].mean(), line_dash="dash", line_color=VERDE,
-                          annotation_text=f"Promedio sin Mbappé: {sin['liga_goles_en_contra'].mean():.0f}")
-        fig_enc.add_annotation(
-            x='2024-25', y=37, text="<b>+43% vs temporada<br>campeona 2023-24</b>",
-            showarrow=True, arrowhead=2, arrowcolor=ROJO, ax=60, ay=-50, font=dict(color=ROJO, size=10),
-            bgcolor="#FFF5F5", bordercolor=ROJO, borderwidth=1
-        )
-        fig_enc.update_layout(LAYOUT_BASE)
-        fig_enc.update_layout(height=320, yaxis=dict(range=[0, 50], title="Goles encajados"), showlegend=False)
-        st.plotly_chart(fig_enc, use_container_width=True)
-
-    with col2:
-        st.markdown("#### Goles encajados en Champions")
-        fig_ucl_enc = go.Figure(go.Bar(
-            x=df['temporada'], y=df['ucl_goles_en_contra'], marker_color=color_mbappe(df['mbappe'], color_con=ROJO),
-            text=df['ucl_goles_en_contra'], textposition='outside'
-        ))
-        fig_ucl_enc.add_hline(y=sin['ucl_goles_en_contra'].mean(), line_dash="dash", line_color=VERDE,
-                              annotation_text=f"Promedio sin Mbappé: {sin['ucl_goles_en_contra'].mean():.0f}")
-        fig_ucl_enc.update_layout(LAYOUT_BASE)
-        fig_ucl_enc.update_layout(height=320, yaxis=dict(range=[0, 28], title="Goles encajados"), showlegend=False)
-        st.plotly_chart(fig_ucl_enc, use_container_width=True)
+    st.markdown("#### Goles encajados en Champions")
+    fig_ucl_enc = go.Figure(go.Bar(
+        x=df['temporada'], y=df['ucl_goles_en_contra'], marker_color=color_mbappe(df['mbappe'], color_con=ROJO),
+        text=df['ucl_goles_en_contra'], textposition='outside'
+    ))
+    fig_ucl_enc.add_hline(y=sin['ucl_goles_en_contra'].mean(), line_dash="dash", line_color=VERDE,
+                          annotation_text=f"Promedio sin Mbappé: {sin['ucl_goles_en_contra'].mean():.0f}")
+    fig_ucl_enc.update_layout(LAYOUT_BASE)
+    fig_ucl_enc.update_layout(height=280, yaxis=dict(range=[0, 28], title="Goles encajados"), showlegend=False)
+    st.plotly_chart(fig_ucl_enc, use_container_width=True)
+    st.caption("La vulnerabilidad también se trasladó a Europa, superando sistemáticamente los registros defensivos previos.")
 
     st.caption("🔴 Temporadas con Mbappé  |  Gris: sin Mbappé")
     st.divider()
 
-    # MÉTRICAS COMPLEMENTARIAS (UNA ENCIMA DE LA OTRA)
+    # MÉTRICAS COMPLEMENTARIAS
     st.markdown("### Métricas de Diagnóstico Complementarias")
     
     st.markdown("#### Champions — Fase alcanzada")
-    # SOLUCIÓN: Cambiado a 'Campeon' (sin tilde) para que coincida exactamente con la base de datos
+    
+    # NUEVA LÓGICA REQUERIDA: Si ucl_titulo es 'Si', forzar a 'Campeon' independientemente del texto de la columna ucl_fase
     fases_orden = {'Octavos': 1, 'Cuartos': 2, 'Semifinal': 3, 'Final': 4, 'Campeon': 5}
     semaforo = {1: '#C81D25', 2: '#E07B39', 3: '#F5C518', 4: '#1D9E75', 5: '#155E3B'}
-    df['fase_num'] = df['ucl_fase'].map(fases_orden)
+    
+    # Aplicamos la condición fila por fila
+    fases_corregidas = []
+    for idx, fila in df.iterrows():
+        if str(fila['ucl_titulo']).strip().lower() == 'si':
+            fases_corregidas.append('Campeon')
+        else:
+            fases_corregidas.append(fila['ucl_fase'])
+            
+    df['fase_limpia'] = fases_corregidas
+    df['fase_num'] = df['fase_limpia'].map(fases_orden)
+    
     col_cl = [semaforo[v] for v in df['fase_num']]
     fig_cl = go.Figure(go.Bar(
         x=df['temporada'], y=df['fase_num'], marker_color=col_cl,
-        text=df['ucl_fase'], textposition='outside'
+        text=df['fase_limpia'].replace('Campeon', 'Campeón'), textposition='outside'
     ))
     fig_cl.update_layout(LAYOUT_BASE)
     fig_cl.update_layout(
@@ -351,7 +350,7 @@ with tab3:
         height=280, showlegend=False
     )
     st.plotly_chart(fig_cl, use_container_width=True)
-    st.caption("Caída en el techo competitivo europeo: de levantar la copa en 2023-24 a estancarse en Cuartos de Final.")
+    st.caption("Caída en el techo competitivo europeo: el club pasó de levantar la copa en 2023-24 a estancarse en Cuartos de Final.")
 
     st.markdown("#### Dependencia — % de goles de Mbappé en LaLiga")
     temporadas_con = con['temporada'].tolist()
@@ -405,7 +404,6 @@ with tab4:
     
     st.divider()
 
-    # SOLUCIÓN: Eliminada la gráfica confusa. Todo el impacto recae en el análisis estructurado.
     avg_pts_sin  = sin['liga_puntos'].mean()
     avg_pts_con  = con['liga_puntos'].mean()
     avg_enc_sin  = sin['liga_goles_en_contra'].mean()
@@ -425,7 +423,7 @@ with tab4:
         La directiva asumió que añadir la pieza individual más cotizada del mercado resolvería el techo goleador del equipo. Sin embargo, el equipo ya promediaba {sin['liga_goles_a_favor'].mean():.0f} goles por torneo. No faltaban goles.<br><br>
         <strong style="color:{ROJO};">3. El desajuste estructural:</strong>
         Los datos evidencian que el verdadero impacto del cambio se sufrió en la fase de contención. Los goles recibidos en LaLiga se dispararon de {avg_enc_sin:.0f} a {avg_enc_con:.0f} anuales, mientras que el ritmo en Europa bajó el listón, sufriendo eliminaciones tempranas en Cuartos de Final.<br><br>
-        <strong style="color:{BLANCO};">Veredicto Final:</strong> El fútbol es un deporte de equilibrios y balance, no de acumulación de nombres. Mbappé fue una solución estelar para un problema ofensivo inexistente, cuyo costo indirecto fue fracturar la solidez defensiva y colectiva que hacía al Real Madrid un equipo imbatible.
+        <strong style="color:{BLANCO};">Veredictos Final:</strong> El fútbol es un deporte de equilibrios y balance, no de acumulación de nombres. Mbappé fue una solución estelar para un problema ofensivo inexistente, cuyo costo indirecto fue fracturar la solidez defensiva y colectiva que hacía al Real Madrid un equipo imbatible.
     </p>
 </div>
 """, unsafe_allow_html=True)
