@@ -269,9 +269,12 @@ with tab2:
 # ==========================================================================
 # TAB 3 — LO QUE PASÓ DESPUÉS
 # ==========================================================================
+# ==========================================================================
+# TAB 3 — LO QUE PASÓ DESPUÉS
+# ==========================================================================
 with tab3:
     st.subheader("Lo que cambió con Mbappé")
-    st.caption("Goles encajados, rendimiento en Champions y dependencia individual")
+    st.caption("Goles encajados y rendimiento en la Champions League")
     st.divider()
 
     k1, k2, k3, k4 = st.columns(4)
@@ -283,7 +286,7 @@ with tab3:
 
     st.divider()
     
-    # REORGANIZADO: Goles encajados uno encima del otro (LaLiga arriba, Champions abajo)
+    # Goles encajados uno encima del otro (LaLiga arriba, Champions abajo)
     st.markdown("### El Impacto Negativo — Goles Encajados por Competición")
     
     st.markdown("#### Goles encajados en LaLiga")
@@ -324,11 +327,9 @@ with tab3:
     
     st.markdown("#### Champions — Fase alcanzada")
     
-    # NUEVA LÓGICA REQUERIDA: Si ucl_titulo es 'Si', forzar a 'Campeon' independientemente del texto de la columna ucl_fase
     fases_orden = {'Octavos': 1, 'Cuartos': 2, 'Semifinal': 3, 'Final': 4, 'Campeon': 5}
     semaforo = {1: '#C81D25', 2: '#E07B39', 3: '#F5C518', 4: '#1D9E75', 5: '#155E3B'}
     
-    # Aplicamos la condición fila por fila
     fases_corregidas = []
     for idx, fila in df.iterrows():
         if str(fila['ucl_titulo']).strip().lower() == 'si':
@@ -352,33 +353,21 @@ with tab3:
     st.plotly_chart(fig_cl, use_container_width=True)
     st.caption("Caída en el techo competitivo europeo: el club pasó de levantar la copa en 2023-24 a estancarse en Cuartos de Final.")
 
-    st.markdown("#### Dependencia — % de goles de Mbappé en LaLiga")
-    temporadas_con = con['temporada'].tolist()
-    goles_mbappe   = con['liga_goles_top'].tolist()
-    goles_total    = con['liga_goles_a_favor'].tolist()
-    goles_resto    = [t - m for t, m in zip(goles_total, goles_mbappe)]
-    pcts           = [m/t*100 for m, t in zip(goles_mbappe, goles_total)]
+    st.divider()
 
-    fig_dep = go.Figure()
-    fig_dep.add_trace(go.Bar(
-        name='Mbappe', x=temporadas_con, y=goles_mbappe, marker_color=ROJO,
-        text=[f"Mbappé: {g} ({p:.0f}%)" for g, p in zip(goles_mbappe, pcts)], textposition='inside', textfont_color='white'
-    ))
-    fig_dep.add_trace(go.Bar(
-        name='Resto del equipo', x=temporadas_con, y=goles_resto, marker_color=GRIS,
-        text=[f"Resto: {g}" for g in goles_resto], textposition='inside'
-    ))
-    fig_dep.update_layout(LAYOUT_BASE)
-    fig_dep.update_layout(barmode='stack', yaxis=dict(range=[0, 90], title="Goles LaLiga"), legend=dict(orientation="h", y=1.12), height=280)
-    st.plotly_chart(fig_dep, use_container_width=True)
-    st.caption("Concentración del gol: la excesiva centralización del ataque reduce la impredecibilidad que caracterizaba al bloque anterior.")
-
-    st.info(
-        f"**Lectura clave:** En 2024-25 Mbappé marcó el **{goles_mbappe[0]/goles_total[0]*100:.0f}%** "
-        f"de los goles del Madrid en LaLiga. Cuando él no aparece, el equipo no tiene plan B. "
-        "Eso no es fortaleza — es fragilidad."
-    )
-
+    # NUEVO TEXTO DE CIERRE REQUERIDO (Sustituye la gráfica eliminada)
+    st.markdown(f"""
+    <div style="background:#FFF5F5; border-left:4px solid {ROJO}; border-radius:6px; padding:1.2rem 1.5rem; margin-top:1rem;">
+        <p style="color:{ROJO}; font-weight:800; font-size:1.05rem; margin:0 0 0.5rem 0;">
+            Diagnóstico Táctico: El "Efecto Mariposa" del Fichaje Galáctico
+        </p>
+        <p style="color:#1A202C; font-size:0.92rem; margin:0; line-height:1.7;">
+            Al retirar la gráfica de dependencia, los datos de este panel revelan un síntoma inequívoco: 
+            <strong>el problema del Real Madrid actual no es de efectividad individual, sino de estructura colectiva.</strong><br><br>
+            La incorporación de una pieza de alto volumen ofensivo que exige libertad posicional fracturó el bloque de presión media y baja que hizo al equipo campeón en la 2023-24. El aumento drástico de goles encajados (tanto en LaLiga como en Champions) demuestra que el equipo sacrificó el equilibrio defensivo por una acumulación de talento en ataque que, irónicamente, no generó más goles netos. El sistema se volvió predecible y frágil.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ==========================================================================
 # TAB 4 — EL VEREDICTO
