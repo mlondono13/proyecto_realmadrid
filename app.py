@@ -362,8 +362,7 @@ with tab3:
             Diagnóstico Táctico: El "Efecto Mariposa" del Fichaje Galáctico
         </p>
         <p style="color:#1A202C; font-size:0.92rem; margin:0; line-height:1.7;">
-            Al retirar la gráfica de dependencia, los datos de este panel revelan un síntoma inequívoco: 
-            <strong>el problema del Real Madrid actual no es de efectividad individual, sino de estructura colectiva.</strong><br><br>
+            <strong>El problema del Real Madrid actual no es de efectividad individual, sino de estructura colectiva.</strong><br><br>
             La incorporación de una pieza de alto volumen ofensivo que exige libertad posicional fracturó el bloque de presión media y baja que hizo al equipo campeón en la 2023-24. El aumento drástico de goles encajados (tanto en LaLiga como en Champions) demuestra que el equipo sacrificó el equilibrio defensivo por una acumulación de talento en ataque que, irónicamente, no generó más goles netos. El sistema se volvió predecible y frágil.
         </p>
     </div>
