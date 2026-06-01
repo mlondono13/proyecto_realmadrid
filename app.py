@@ -42,6 +42,32 @@ df = cargar()
 sin = df[df['mbappe'] == 'No']
 con = df[df['mbappe'] == 'Si']
 
+# Datos dinámicos temporadas antes de Mbappé
+
+antes = (
+    df[df['mbappe'] == 'No']
+    .sort_values('temporada')
+    .copy()
+)
+
+temporadas_antes = antes['temporada'].tolist()
+
+puntos_antes = antes['liga_puntos'].tolist()
+
+goles_contra_antes = antes['liga_goles_en_contra'].tolist()
+
+fases_map = {
+    'Octavos': 1,
+    'Cuartos': 2,
+    'Semifinal': 3,
+    'Final': 4,
+    'Campeon': 5
+}
+
+fases_antes = antes['ucl_fase'].map(fases_map)
+
+textos_fase = antes['ucl_fase']
+
 # ── PREGUNTA CENTRAL ───────────────────────────────────────────────────────
 st.markdown(f"""
 <div style="background:{AZUL_RM}; border-radius:12px; padding:1.5rem 2rem; margin-bottom:1rem;">
@@ -94,35 +120,107 @@ with tab1:
     st.divider()
     st.markdown("### Comparativa LaLiga y Champions — antes del fichaje")
 
-    metricas   = ['LaLiga\nPuntos', 'LaLiga\nGoles a favor', 'LaLiga\nGoles en contra',
-                  'UCL\nGoles a favor', 'UCL\nGoles en contra', 'UCL\nPartidos jugados']
-    vals_2223  = [78, 75, 36, 26, 17, 12]
-    vals_2324  = [95, 87, 26, 23, 13, 13]
-    x = list(range(len(metricas)))
-    w = 0.3
+    st.markdown("### ¿Qué tan bueno era el Madrid antes de Mbappé?")
 
-    fig_ctx = go.Figure()
-    fig_ctx.add_trace(go.Bar(
-        x=[xi - w/2 for xi in x], y=vals_2223, name='2022-23',
-        marker_color=GRIS, width=w, text=vals_2223, textposition='outside',
-        hovertemplate="2022-23 · %{y}<extra></extra>"
+col1, col2 = st.columns(2)
+
+with col1:
+
+    st.markdown("#### Rendimiento en LaLiga")
+
+    fig_pts = go.Figure()
+
+    fig_pts.add_trace(go.Bar(
+        x=temporadas_antes,
+        y=puntos_antes,
+        marker_color=[GRIS, ORO],
+        text=puntos_antes,
+        textposition="outside"
     ))
-    fig_ctx.add_trace(go.Bar(
-        x=[xi + w/2 for xi in x], y=vals_2324, name='2023-24',
-        marker_color=ORO, width=w, text=vals_2324, textposition='outside',
-        hovertemplate="2023-24 · %{y}<extra></extra>"
-    ))
-    fig_ctx.update_layout(
-        xaxis=dict(tickvals=x, ticktext=metricas, showgrid=False),
-        yaxis=dict(showgrid=True, gridcolor="#E2E8F0", range=[0, 115],
-                   title="Valor"),
-        plot_bgcolor="white", paper_bgcolor="white",
-        legend=dict(orientation="h", y=1.08),
-        barmode='group', height=400,
-        margin=dict(l=20, r=20, t=30, b=50)
+
+    fig_pts.update_layout(
+        yaxis=dict(
+            title="Puntos",
+            range=[0,110],
+            gridcolor="#E2E8F0"
+        ),
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        showlegend=False,
+        height=320
     )
-    st.plotly_chart(fig_ctx, use_container_width=True)
 
+    st.plotly_chart(fig_pts, use_container_width=True)
+
+    st.caption(
+        "El Madrid pasó de 78 a 95 puntos y conquistó LaLiga."
+    )
+
+with col2:
+
+    st.markdown("#### Solidez defensiva")
+
+    fig_gc = go.Figure()
+
+    fig_gc.add_trace(go.Bar(
+        x=temporadas_antes,
+        y=goles_contra_antes,
+        marker_color=[GRIS, VERDE],
+        text=goles_contra_antes,
+        textposition="outside"
+    ))
+
+    fig_gc.update_layout(
+        yaxis=dict(
+            title="Goles encajados",
+            range=[0,45],
+            gridcolor="#E2E8F0"
+        ),
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        showlegend=False,
+        height=320
+    )
+
+    st.plotly_chart(fig_gc, use_container_width=True)
+
+    st.caption(
+        "La defensa mejoró considerablemente en la temporada campeona."
+    )
+
+st.divider()
+
+st.markdown("#### Rendimiento en Champions League")
+
+fig_ucl = go.Figure()
+
+fig_ucl.add_trace(go.Bar(
+    x=temporadas_antes,
+    y=fases_antes,
+    marker_color=[GRIS, ORO],
+    text=textos_fase,
+    textposition="outside"
+))
+
+fig_ucl.update_layout(
+    yaxis=dict(
+        tickvals=[1,2,3,4,5],
+        ticktext=[
+            "Octavos",
+            "Cuartos",
+            "Semifinal",
+            "Final",
+            "Campeón"
+        ],
+        range=[0,6]
+    ),
+    plot_bgcolor="white",
+    paper_bgcolor="white",
+    showlegend=False,
+    height=350
+)
+
+st.plotly_chart(fig_ucl, use_container_width=True)
     st.markdown(f"""
 <div style="background:#FFFAF0; border-left:4px solid {ORO};
             border-radius:6px; padding:1rem 1.5rem;">
@@ -335,11 +433,15 @@ with tab3:
         )
         st.plotly_chart(fig_dep, use_container_width=True)
 
-    st.info(
-        f"**Lectura clave:** En 2024-25 Mbappe marcó el **{goles_mbappe[0]/goles_total[0]*100:.0f}%** "
-        f"de los goles del Madrid en LaLiga. Cuando el no aparece, el equipo no tiene plan B. "
-        "Eso no es fortaleza — es fragilidad."
-    )
+        promedio_dependencia = sum(pcts) / len(pcts)
+
+        st.info(
+            f"**Lectura clave:** Mbappé aporta en promedio el "
+            f"**{promedio_dependencia:.0f}%** de los goles del Madrid en LaLiga. "
+            f"Esto evidencia una dependencia ofensiva creciente. "
+            "Cuando una parte tan grande de la producción recae en un solo jugador, "
+            "el equipo se vuelve más vulnerable."
+        )
 
 # ══════════════════════════════════════════════════════════════════════════
 # TAB 4 — EL VEREDICTO
