@@ -10,6 +10,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# Estilos CSS Custom
 st.markdown("""
 <style>
     .block-container { padding-top: 1.5rem; }
@@ -28,6 +29,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Paleta de colores
 BLANCO  = "#F5F5F5"
 ORO     = "#C9A84C"
 AZUL_RM = "#1A1A2E"
@@ -35,6 +37,7 @@ ROJO    = "#C81D25"
 VERDE   = "#1D9E75"
 GRIS    = "#B4B2A9"
 
+# CONFIGURACIÓN BASE INMUTABLE
 LAYOUT_BASE = dict(
     plot_bgcolor="white",
     paper_bgcolor="white",
@@ -64,26 +67,24 @@ st.markdown(f"""
         ¿El Real Madrid solucionó el problema correcto al fichar a Mbappé?
     </p>
     <p style="color:{ORO}; font-size:0.95rem; margin:0;">
-        Analisis comparativo · LaLiga & Champions League · Temporadas 2022-23 a 2025-26
+        Análisis comparativo · LaLiga & Champions League · Temporadas 2022-23 a 2025-26
     </p>
 </div>
 """, unsafe_allow_html=True)
 
 tab1, tab2, tab3, tab4 = st.tabs([
     "📋  Contexto",
-    "⚽  ¿Habia problema de gol?",
-    "📉  Lo que paso despues",
+    "⚽  ¿Había problema de gol?",
+    "📉  Lo que pasó después",
     "🏆  El veredicto"
 ])
 
 # ══════════════════════════════════════════════════════════════════════════
 # TAB 1 — CONTEXTO
-# Todas las variables son discretas (conteos de goles, puntos, partidos).
-# → Barras separadas por categoría homogénea (mismas unidades en cada gráfica)
 # ══════════════════════════════════════════════════════════════════════════
 with tab1:
-    st.subheader("El Madrid antes de Mbappe")
-    st.caption("2022-23 y 2023-24 — el equipo que recibio al frances")
+    st.subheader("El Madrid antes de Mbappé")
+    st.caption("2022-23 y 2023-24 — el equipo que recibió al francés")
     st.divider()
 
     st.markdown(f"""
@@ -94,65 +95,55 @@ with tab1:
     </p>
     <p style="color:#1A202C; font-size:0.92rem; margin:0; line-height:1.7;">
         Tras ganar LaLiga 2023-24 con <strong>95 puntos</strong> y la <strong>Champions League</strong>,
-        el Real Madrid creia que anadir al mejor delantero del mundo los llevaria al siguiente nivel.
-        La logica era simple: mas gol = mas titulos. ¿Pero era el gol realmente su problema?
+        el Real Madrid creía que añadir al mejor delantero del mundo los llevaría al siguiente nivel.
+        La lógica era simple: más gol = más títulos. ¿Pero era el gol realmente su problema?
     </p>
 </div>
 """, unsafe_allow_html=True)
 
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("LaLiga 2022-23", "78 pts", "2do lugar")
-    c2.metric("LaLiga 2023-24", "95 pts", "Campeon")
+    c2.metric("LaLiga 2023-24", "95 pts", "Campeón")
     c3.metric("Champions 2022-23", "Semifinal", "Eliminado por Man City")
-    c4.metric("Champions 2023-24", "Campeon", "15vo titulo europeo")
+    c4.metric("Champions 2023-24", "Campeón", "15vo título europeo")
 
     st.divider()
 
-    # ── Bloque 1: LaLiga — variables de mismo tipo (puntos)
     st.markdown("### LaLiga — Rendimiento antes del fichaje")
     col_a, col_b = st.columns(2)
 
     with col_a:
-        # Variable discreta: puntos por temporada → barras separadas
         st.markdown("#### Puntos en LaLiga")
-        df_sin = df[df['mbappe'] == 'No']
         fig_pts = go.Figure(go.Bar(
-            x=df_sin['temporada'],
-            y=df_sin['liga_puntos'],
+            x=sin['temporada'],
+            y=sin['liga_puntos'],
             marker_color=[GRIS, ORO],
-            text=df_sin['liga_puntos'],
+            text=sin['liga_puntos'],
             textposition='outside',
             hovertemplate="<b>%{x}</b><br>%{y} puntos<extra></extra>"
         ))
-        LAYOUT_BASE = dict(
-            plot_bgcolor="white",
-            paper_bgcolor="white",
-            margin=dict(l=20, r=20, t=40, b=40),
-            font=dict(family="Arial, sans-serif"),
-            xaxis=dict(showgrid=False)
-        )
+        fig_pts.update_layout(**LAYOUT_BASE, height=300)
         st.plotly_chart(fig_pts, use_container_width=True)
         st.caption("Variable discreta → barras separadas")
 
     with col_b:
-        # Variable discreta: victorias/empates/derrotas → barras apiladas (misma unidad: partidos)
         st.markdown("#### Resultados en LaLiga (V / E / D)")
         fig_res = go.Figure()
         fig_res.add_trace(go.Bar(
-            name='Victorias', x=df_sin['temporada'], y=df_sin['liga_victorias'],
-            marker_color=VERDE, text=df_sin['liga_victorias'],
+            name='Victorias', x=sin['temporada'], y=sin['liga_victorias'],
+            marker_color=VERDE, text=sin['liga_victorias'],
             textposition='inside', textfont_color='white',
             hovertemplate="<b>%{x}</b><br>Victorias: %{y}<extra></extra>"
         ))
         fig_res.add_trace(go.Bar(
-            name='Empates', x=df_sin['temporada'], y=df_sin['liga_empates'],
-            marker_color=ORO, text=df_sin['liga_empates'],
+            name='Empates', x=sin['temporada'], y=sin['liga_empates'],
+            marker_color=ORO, text=sin['liga_empates'],
             textposition='inside',
             hovertemplate="<b>%{x}</b><br>Empates: %{y}<extra></extra>"
         ))
         fig_res.add_trace(go.Bar(
-            name='Derrotas', x=df_sin['temporada'], y=df_sin['liga_derrotas'],
-            marker_color=ROJO, text=df_sin['liga_derrotas'],
+            name='Derrotas', x=sin['temporada'], y=sin['liga_derrotas'],
+            marker_color=ROJO, text=sin['liga_derrotas'],
             textposition='inside', textfont_color='white',
             hovertemplate="<b>%{x}</b><br>Derrotas: %{y}<extra></extra>"
         ))
@@ -167,23 +158,21 @@ with tab1:
 
     st.divider()
 
-    # ── Bloque 2: LaLiga — Goles (misma unidad, separados ataque vs defensa)
     st.markdown("### LaLiga — Producción ofensiva vs solidez defensiva")
     col_c, col_d = st.columns(2)
 
     with col_c:
-        # Variable discreta: goles a favor → barras separadas
         st.markdown("#### Goles anotados (LaLiga)")
         fig_gf = go.Figure(go.Bar(
-            x=df_sin['temporada'], y=df_sin['liga_goles_a_favor'],
+            x=sin['temporada'], y=sin['liga_goles_a_favor'],
             marker_color=[GRIS, ORO],
-            text=df_sin['liga_goles_a_favor'], textposition='outside',
+            text=sin['liga_goles_a_favor'], textposition='outside',
             hovertemplate="<b>%{x}</b><br>%{y} goles a favor<extra></extra>"
         ))
-        fig_gf.add_hline(y=df_sin['liga_goles_a_favor'].mean(), line_dash="dash",
+        fig_gf.add_hline(y=sin['liga_goles_a_favor'].mean(), line_dash="dash",
                          line_color=VERDE, line_width=2,
-                         annotation_text=f"Promedio: {df_sin['liga_goles_a_favor'].mean():.0f}",
-                         annotation_font_color=VERDE, annotation_position="top left")
+                         annotation_text=f"Promedio: {sin['liga_goles_a_favor'].mean():.0f}",
+                         annotation_position="top left")
         fig_gf.update_layout(
             **LAYOUT_BASE, height=300,
             yaxis=dict(range=[0, 105], showgrid=True, gridcolor="#E2E8F0", title="Goles")
@@ -191,43 +180,41 @@ with tab1:
         st.plotly_chart(fig_gf, use_container_width=True)
 
     with col_d:
-        # Variable discreta: goles en contra → barras separadas (mismo eje que arriba para comparar)
         st.markdown("#### Goles encajados (LaLiga)")
         fig_gc = go.Figure(go.Bar(
-            x=df_sin['temporada'], y=df_sin['liga_goles_en_contra'],
+            x=sin['temporada'], y=sin['liga_goles_en_contra'],
             marker_color=[GRIS, ORO],
-            text=df_sin['liga_goles_en_contra'], textposition='outside',
+            text=sin['liga_goles_en_contra'], textposition='outside',
             hovertemplate="<b>%{x}</b><br>%{y} goles en contra<extra></extra>"
         ))
-        fig_gc.add_hline(y=df_sin['liga_goles_en_contra'].mean(), line_dash="dash",
+        fig_gc.add_hline(y=sin['liga_goles_en_contra'].mean(), line_dash="dash",
                          line_color=VERDE, line_width=2,
-                         annotation_text=f"Promedio: {df_sin['liga_goles_en_contra'].mean():.0f}",
-                         annotation_font_color=VERDE, annotation_position="top left")
+                         annotation_text=f"Promedio: {sin['liga_goles_en_contra'].mean():.0f}",
+                         annotation_position="top left")
         fig_gc.update_layout(
             **LAYOUT_BASE, height=300,
             yaxis=dict(range=[0, 105], showgrid=True, gridcolor="#E2E8F0", title="Goles")
         )
         st.plotly_chart(fig_gc, use_container_width=True)
 
-    st.caption("🟡 2023-24: Temporada campeona  |  Gris: 2022-23")
+    st.caption("区域 2023-24: Temporada campeona  |  Gris: 2022-23")
     st.divider()
 
-    # ── Bloque 3: Champions — misma lógica, separados de LaLiga
     st.markdown("### Champions League — Rendimiento antes del fichaje")
     col_e, col_f = st.columns(2)
 
     with col_e:
         st.markdown("#### Goles anotados (Champions)")
         fig_ucl_gf = go.Figure(go.Bar(
-            x=df_sin['temporada'], y=df_sin['ucl_goles_a_favor'],
+            x=sin['temporada'], y=sin['ucl_goles_a_favor'],
             marker_color=[GRIS, ORO],
-            text=df_sin['ucl_goles_a_favor'], textposition='outside',
+            text=sin['ucl_goles_a_favor'], textposition='outside',
             hovertemplate="<b>%{x}</b><br>%{y} goles UCL<extra></extra>"
         ))
-        fig_ucl_gf.add_hline(y=df_sin['ucl_goles_a_favor'].mean(), line_dash="dash",
+        fig_ucl_gf.add_hline(y=sin['ucl_goles_a_favor'].mean(), line_dash="dash",
                               line_color=VERDE, line_width=2,
-                              annotation_text=f"Promedio: {df_sin['ucl_goles_a_favor'].mean():.0f}",
-                              annotation_font_color=VERDE, annotation_position="top left")
+                              annotation_text=f"Promedio: {sin['ucl_goles_a_favor'].mean():.0f}",
+                              annotation_position="top left")
         fig_ucl_gf.update_layout(
             **LAYOUT_BASE, height=300,
             yaxis=dict(range=[0, 35], showgrid=True, gridcolor="#E2E8F0", title="Goles")
@@ -237,22 +224,20 @@ with tab1:
     with col_f:
         st.markdown("#### Goles encajados (Champions)")
         fig_ucl_gc = go.Figure(go.Bar(
-            x=df_sin['temporada'], y=df_sin['ucl_goles_en_contra'],
+            x=sin['temporada'], y=sin['ucl_goles_en_contra'],
             marker_color=[GRIS, ORO],
-            text=df_sin['ucl_goles_en_contra'], textposition='outside',
+            text=sin['ucl_goles_en_contra'], textposition='outside',
             hovertemplate="<b>%{x}</b><br>%{y} goles encajados UCL<extra></extra>"
         ))
-        fig_ucl_gc.add_hline(y=df_sin['ucl_goles_en_contra'].mean(), line_dash="dash",
+        fig_ucl_gc.add_hline(y=sin['ucl_goles_en_contra'].mean(), line_dash="dash",
                               line_color=VERDE, line_width=2,
-                              annotation_text=f"Promedio: {df_sin['ucl_goles_en_contra'].mean():.0f}",
-                              annotation_font_color=VERDE, annotation_position="top left")
+                              annotation_text=f"Promedio: {sin['ucl_goles_en_contra'].mean():.0f}",
+                              annotation_position="top left")
         fig_ucl_gc.update_layout(
             **LAYOUT_BASE, height=300,
             yaxis=dict(range=[0, 35], showgrid=True, gridcolor="#E2E8F0", title="Goles")
         )
         st.plotly_chart(fig_ucl_gc, use_container_width=True)
-
-    st.caption("🟡 2023-24: Temporada campeona  |  Gris: 2022-23")
 
     st.markdown(f"""
 <div style="background:#FFFAF0; border-left:4px solid {ORO};
@@ -260,18 +245,18 @@ with tab1:
     <p style="color:#744210; font-size:0.9rem; margin:0; line-height:1.7;">
         <strong>Lectura:</strong> En 2023-24 el Madrid fue casi perfecto — 1 sola derrota en LaLiga,
         13 partidos invicto en Champions ganando la final. La pregunta que nadie hizo fue:
-        <em>¿que problema habia que resolver?</em>
+        <em>¿qué problema había que resolver?</em>
     </p>
 </div>
 """, unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════════════════
-# TAB 2 — ¿HABIA PROBLEMA DE GOL?
+# TAB 2 — ¿HABÍA PROBLEMA DE GOL?
 # ══════════════════════════════════════════════════════════════════════════
 with tab2:
-    st.subheader("¿El Madrid tenia un problema de gol?")
-    st.caption("La hipotesis que justificó el fichaje — vs. la realidad de los datos")
+    st.subheader("¿El Real Madrid tenía un problema de gol?")
+    st.caption("La hipótesis que justificó el fichaje — vs. la realidad de los datos")
     st.divider()
 
     col_a, col_b = st.columns(2)
@@ -286,8 +271,8 @@ with tab2:
         ))
         fig1.add_hline(y=sin['liga_goles_a_favor'].mean(), line_dash="dash",
                        line_color=VERDE, line_width=2,
-                       annotation_text=f"Promedio sin Mbappe: {sin['liga_goles_a_favor'].mean():.0f}",
-                       annotation_font_color=VERDE, annotation_position="top left")
+                       annotation_text=f"Promedio sin Mbappé: {sin['liga_goles_a_favor'].mean():.0f}",
+                       annotation_position="top left")
         fig1.update_layout(
             **LAYOUT_BASE, height=320,
             yaxis=dict(range=[0, 105], showgrid=True, gridcolor="#E2E8F0", title="Goles"),
@@ -305,8 +290,8 @@ with tab2:
         ))
         fig2.add_hline(y=sin['ucl_goles_a_favor'].mean(), line_dash="dash",
                        line_color=VERDE, line_width=2,
-                       annotation_text=f"Promedio sin Mbappe: {sin['ucl_goles_a_favor'].mean():.0f}",
-                       annotation_font_color=VERDE, annotation_position="top left")
+                       annotation_text=f"Promedio sin Mbappé: {sin['ucl_goles_a_favor'].mean():.0f}",
+                       annotation_position="top left")
         fig2.update_layout(
             **LAYOUT_BASE, height=320,
             yaxis=dict(range=[0, 40], showgrid=True, gridcolor="#E2E8F0", title="Goles"),
@@ -314,7 +299,7 @@ with tab2:
         )
         st.plotly_chart(fig2, use_container_width=True)
 
-    st.caption("🟡 Temporadas con Mbappe  |  Gris: sin Mbappe")
+    st.caption("🟡 Temporadas con Mbappé  |  Gris: sin Mbappé")
     st.divider()
 
     avg_liga_sin = sin['liga_goles_a_favor'].mean()
@@ -325,45 +310,45 @@ with tab2:
     st.markdown(f"""
 <div style="background:{AZUL_RM}; border-radius:10px; padding:1.5rem 2rem;">
     <p style="color:{ORO}; font-weight:800; font-size:1rem; margin:0 0 0.6rem 0;">
-        Lo que dicen los numeros
+        Lo que dicen los números
     </p>
     <p style="color:{BLANCO}; font-size:0.95rem; margin:0; line-height:1.8;">
-        Sin Mbappe el Madrid promediaba <strong style="color:{ORO};">{avg_liga_sin:.0f} goles en LaLiga</strong>
+        Sin Mbappé el Madrid promediaba <strong style="color:{ORO};">{avg_liga_sin:.0f} goles en LaLiga</strong>
         y <strong style="color:{ORO};">{avg_ucl_sin:.0f} en Champions</strong> por temporada.<br>
-        Con Mbappe promedia <strong style="color:{ROJO};">{avg_liga_con:.0f} en LaLiga</strong>
+        Con Mbappé promedia <strong style="color:{ROJO};">{avg_liga_con:.0f} en LaLiga</strong>
         y <strong style="color:{ROJO};">{avg_ucl_con:.0f} en Champions</strong>.<br><br>
-        <strong style="color:{BLANCO};">El Madrid no tenia un problema de gol.
-        Tenia la mejor temporada de su historia justo antes de ficharlo.
-        El fichaje fue la respuesta a una pregunta que nadie habia formulado.</strong>
+        <strong style="color:{BLANCO};">El Madrid no tenía un problema de gol.
+        Tenía la mejor temporada de su historia justo antes de ficharlo.
+        El fichaje fue la respuesta a una pregunta que nadie había formulado.</strong>
     </p>
 </div>
 """, unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════════════════
-# TAB 3 — LO QUE PASO DESPUES
+# TAB 3 — LO QUE PASÓ DESPUÉS
 # ══════════════════════════════════════════════════════════════════════════
 with tab3:
-    st.subheader("Lo que cambio con Mbappe")
+    st.subheader("Lo que cambió con Mbappé")
     st.caption("Goles encajados, rendimiento en Champions y dependencia individual")
     st.divider()
 
     k1, k2, k3, k4 = st.columns(4)
-    k1.metric("Goles encajados/partido LaLiga sin Mbappe",
+    k1.metric("Goles encajados/partido LaLiga sin Mbappé",
               f"{sin['liga_goles_en_contra'].mean()/38:.2f}", "promedio 2022-2024")
-    k2.metric("Goles encajados/partido LaLiga con Mbappe",
+    k2.metric("Goles encajados/partido LaLiga con Mbappé",
               f"{con['liga_goles_en_contra'].mean()/38:.2f}",
               f"+{con['liga_goles_en_contra'].mean()/38 - sin['liga_goles_en_contra'].mean()/38:.2f} por partido",
               delta_color="inverse")
-    k3.metric("Champions sin Mbappe", "1 titulo", "Final + Semifinal")
-    k4.metric("Champions con Mbappe", "0 titulos", "Cuartos + Cuartos",
+    k3.metric("Champions sin Mbappé", "1 título", "Final + Semifinal")
+    k4.metric("Champions con Mbappé", "0 títulos", "Cuartos + Cuartos",
               delta_color="inverse")
 
     st.divider()
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown("#### Goles encajados en LaLiga — la anomalia defensiva")
+        st.markdown("#### Goles encajados en LaLiga — la anomalía defensiva")
         col_e = color_mbappe(df['mbappe'], color_con=ROJO)
         fig_enc = go.Figure(go.Bar(
             x=df['temporada'], y=df['liga_goles_en_contra'],
@@ -372,8 +357,8 @@ with tab3:
         ))
         fig_enc.add_hline(y=sin['liga_goles_en_contra'].mean(), line_dash="dash",
                           line_color=VERDE, line_width=2,
-                          annotation_text=f"Promedio sin Mbappe: {sin['liga_goles_en_contra'].mean():.0f}",
-                          annotation_font_color=VERDE, annotation_position="top left")
+                          annotation_text=f"Promedio sin Mbappé: {sin['liga_goles_en_contra'].mean():.0f}",
+                          annotation_position="top left")
         fig_enc.add_annotation(
             x='2024-25', y=37,
             text="<b>+43% vs temporada<br>campeona 2023-24</b>",
@@ -398,8 +383,8 @@ with tab3:
         ))
         fig_ucl_enc.add_hline(y=sin['ucl_goles_en_contra'].mean(), line_dash="dash",
                               line_color=VERDE, line_width=2,
-                              annotation_text=f"Promedio sin Mbappe: {sin['ucl_goles_en_contra'].mean():.0f}",
-                              annotation_font_color=VERDE, annotation_position="top left")
+                              annotation_text=f"Promedio sin Mbappé: {sin['ucl_goles_en_contra'].mean():.0f}",
+                              annotation_position="top left")
         fig_ucl_enc.update_layout(
             **LAYOUT_BASE, height=320,
             yaxis=dict(range=[0, 28], showgrid=True, gridcolor="#E2E8F0", title="Goles encajados"),
@@ -407,14 +392,13 @@ with tab3:
         )
         st.plotly_chart(fig_ucl_enc, use_container_width=True)
 
-    st.caption("🔴 Temporadas con Mbappe  |  Gris: sin Mbappe")
+    st.caption("🔴 Temporadas con Mbappé  |  Gris: sin Mbappé")
     st.divider()
 
     col3, col4 = st.columns(2)
 
     with col3:
-        # Variable ORDINAL: fase UCL → barras ordenadas con semáforo de color
-        st.markdown("#### Champions — Fase alcanzada (variable ordinal)")
+        st.markdown("#### Champions — Fase alcanzada")
         fases_orden = {'Octavos': 1, 'Cuartos': 2, 'Semifinal': 3, 'Final': 4, 'Campeon': 5}
         semaforo = {1: '#C81D25', 2: '#E07B39', 3: '#F5C518', 4: '#1D9E75', 5: '#155E3B'}
         df['fase_num'] = df['ucl_fase'].map(fases_orden)
@@ -426,10 +410,9 @@ with tab3:
         ))
         fig_cl.update_layout(
             **LAYOUT_BASE,
-            xaxis=dict(showgrid=False),
             yaxis=dict(
                 tickvals=[1, 2, 3, 4, 5],
-                ticktext=['Octavos', 'Cuartos', 'Semifinal', 'Final', 'Campeon'],
+                ticktext=['Octavos', 'Cuartos', 'Semifinal', 'Final', 'Campeón'],
                 showgrid=True, gridcolor="#E2E8F0", range=[0, 6.5]
             ),
             height=320, showlegend=False
@@ -438,8 +421,7 @@ with tab3:
         st.caption("Variable ordinal → barras ordenadas con semáforo de color (rojo = peor, verde = mejor)")
 
     with col4:
-        # Variable discreta: distribución goles → barras apiladas (misma unidad)
-        st.markdown("#### Dependencia — % de goles de Mbappe en LaLiga")
+        st.markdown("#### Dependencia — % de goles de Mbappé en LaLiga")
         temporadas_con = con['temporada'].tolist()
         goles_mbappe   = con['liga_goles_top'].tolist()
         goles_total    = con['liga_goles_a_favor'].tolist()
@@ -449,10 +431,10 @@ with tab3:
         fig_dep = go.Figure()
         fig_dep.add_trace(go.Bar(
             name='Mbappe', x=temporadas_con, y=goles_mbappe,
-            marker_color=ROJO, text=[f"Mbappe: {g} ({p:.0f}%)"
-                                      for g, p in zip(goles_mbappe, pcts)],
+            marker_color=ROJO, text=[f"Mbappé: {g} ({p:.0f}%)"
+                                     for g, p in zip(goles_mbappe, pcts)],
             textposition='inside', textfont_color='white',
-            hovertemplate="<b>%{x}</b><br>Mbappe: %{y} goles<extra></extra>"
+            hovertemplate="<b>%{x}</b><br>Mbappé: %{y} goles<extra></extra>"
         ))
         fig_dep.add_trace(go.Bar(
             name='Resto del equipo', x=temporadas_con, y=goles_resto,
@@ -471,8 +453,8 @@ with tab3:
         st.plotly_chart(fig_dep, use_container_width=True)
 
     st.info(
-        f"**Lectura clave:** En 2024-25 Mbappe marcó el **{goles_mbappe[0]/goles_total[0]*100:.0f}%** "
-        f"de los goles del Madrid en LaLiga. Cuando el no aparece, el equipo no tiene plan B. "
+        f"**Lectura clave:** En 2024-25 Mbappé marcó el **{goles_mbappe[0]/goles_total[0]*100:.0f}%** "
+        f"de los goles del Madrid en LaLiga. Cuando él no aparece, el equipo no tiene plan B. "
         "Eso no es fortaleza — es fragilidad."
     )
 
@@ -482,7 +464,7 @@ with tab3:
 # ══════════════════════════════════════════════════════════════════════════
 with tab4:
     st.subheader("El veredicto")
-    st.caption("Contexto → Necesidad → Problema → Solucion")
+    st.caption("Contexto → Necesidad → Problema → Solución")
     st.divider()
 
     st.markdown("### Resumen comparativo — las 4 temporadas")
@@ -494,18 +476,16 @@ with tab4:
     ]].copy()
     df_show.columns = [
         'Temporada','Liga GF','Liga GC','Puntos','Pos.',
-        'Titulo Liga','UCL GF','UCL GC','UCL Partidos',
-        'UCL Fase','Eliminado por','Titulo UCL','Mbappe'
+        'Título Liga','UCL GF','UCL GC','UCL Partidos',
+        'UCL Fase','Eliminado por','Título UCL','Mbappé'
     ]
     st.dataframe(df_show, use_container_width=True, hide_index=True)
     st.divider()
 
-    # Gráfica comparativa final: puntos y goles encajados con y sin Mbappe
-    # Variable continua (promedios) → scatter + línea de referencia para comparar grupos
-    st.markdown("### Comparativa de medias — Sin Mbappe vs. Con Mbappe")
+    st.markdown("### Comparativa de medias — Sin Mbappé vs. Con Mbappé")
 
-    metricas_comp = ['Puntos LaLiga', 'Goles a favor\nLaLiga', 'Goles encajados\nLaLiga',
-                     'Goles a favor\nChampions', 'Goles encajados\nChampions']
+    metricas_comp = ['Puntos LaLiga', 'Goles a favor<br>LaLiga', 'Goles encajados<br>LaLiga',
+                     'Goles a favor<br>Champions', 'Goles encajados<br>Champions']
     vals_sin = [
         sin['liga_puntos'].mean(),
         sin['liga_goles_a_favor'].mean(),
@@ -521,19 +501,18 @@ with tab4:
         con['ucl_goles_en_contra'].mean()
     ]
 
-    # Barras horizontales para comparar dos grupos con categoría nominal
     fig_comp = go.Figure()
     fig_comp.add_trace(go.Bar(
-        y=metricas_comp, x=vals_sin, name='Sin Mbappe (2022-24)',
+        y=metricas_comp, x=vals_sin, name='Sin Mbappé (2022-24)',
         orientation='h', marker_color=ORO,
-        text=[f"{v:.0f}" for v in vals_sin], textposition='outside',
-        hovertemplate="Sin Mbappe · %{y}: %{x:.0f}<extra></extra>"
+        text=[f"{v:.1f}" for v in vals_sin], textposition='outside',
+        hovertemplate="Sin Mbappé · %{y}: %{x:.1f}<extra></extra>"
     ))
     fig_comp.add_trace(go.Bar(
-        y=metricas_comp, x=vals_con, name='Con Mbappe (2024-26)',
+        y=metricas_comp, x=vals_con, name='Con Mbappé (2024-26)',
         orientation='h', marker_color=ROJO,
-        text=[f"{v:.0f}" for v in vals_con], textposition='outside',
-        hovertemplate="Con Mbappe · %{y}: %{x:.0f}<extra></extra>"
+        text=[f"{v:.1f}" for v in vals_con], textposition='outside',
+        hovertemplate="Con Mbappé · %{y}: %{x:.1f}<extra></extra>"
     ))
     fig_comp.update_layout(
         barmode='group',
@@ -563,24 +542,24 @@ with tab4:
     </p>
     <p style="color:{BLANCO}; font-size:0.97rem; line-height:1.9; margin:0;">
         <strong style="color:{ORO};">Contexto:</strong>
-        El Madrid llego a 2024 como el mejor equipo de Europa — 95 puntos en LaLiga,
-        campeon de Champions sin perder un solo partido, y apenas 13 goles encajados en
-        toda la Champions. Era practicamente perfecto.<br><br>
+        El Madrid llegó a 2024 como el mejor equipo de Europa — 95 puntos en LaLiga,
+        campeón de Champions sin perder un solo partido, y apenas 13 goles encajados en
+        toda la Champions. Era prácticamente perfecto.<br><br>
         <strong style="color:{ORO};">Necesidad percibida:</strong>
-        La directiva creia que fichar al mejor delantero del mundo los elevaria aun mas.
-        Logica simple: mas gol = mas titulos. Pero los datos ya mostraban que el gol
+        La directiva creía que fichar al mejor delantero del mundo los elevaría aún más.
+        Lógica simple: más gol = más títulos. Pero los datos ya mostraban que el gol
         no era el problema — promediaban {sin['liga_goles_a_favor'].mean():.0f} goles
         por temporada en LaLiga y {sin['ucl_goles_a_favor'].mean():.0f} en Champions
-        sin Mbappe.<br><br>
+        sin Mbappé.<br><br>
         <strong style="color:{ROJO};">Problema real:</strong>
-        Con Mbappe, los goles encajados en LaLiga subieron de {avg_enc_sin:.0f} a
+        Con Mbappé, los goles encajados en LaLiga subieron de {avg_enc_sin:.0f} a
         {avg_enc_con:.0f} por temporada. En Champions, de {avg_ucl_enc_sin:.0f} a
         {avg_ucl_enc_con:.0f}. Los puntos cayeron de {avg_pts_sin:.0f} a {avg_pts_con:.0f}.
         Y en Europa, dos eliminaciones consecutivas en cuartos de final tras dos finales
-        seguidas sin el. Ademas, creo un problema nuevo: dependencia extrema.<br><br>
-        <strong style="color:{BLANCO};">Mbappe es un jugador excepcional. Pero fue la respuesta
-        a una pregunta que nadie habia formulado. El Madrid no necesitaba mas gol —
-        necesitaba mantener la solidez que los habia hecho campeones.</strong>
+        seguidas sin él. Además, creó un problema nuevo: dependencia extrema.<br><br>
+        <strong style="color:{BLANCO};">Mbappé es un jugador excepcional. Pero fue la respuesta
+        a una pregunta que nadie había formulado. El Madrid no necesitaba más gol —
+        necesitaba mantener la solidez que los había hecho campeones.</strong>
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -594,8 +573,8 @@ with tab4:
         Lo que los datos confirman
     </p>
     <p style="color:#1A202C; font-size:0.88rem; margin:0; line-height:1.6;">
-        • Sin Mbappe: 1 Champions, 1 LaLiga, {avg_pts_sin:.0f} puntos promedio<br>
-        • Con Mbappe: 0 Champions, 0 LaLiga, {avg_pts_con:.0f} puntos promedio<br>
+        • Sin Mbappé: 1 Champions, 1 LaLiga, {avg_pts_sin:.0f} puntos promedio<br>
+        • Con Mbappé: 0 Champions, 0 LaLiga, {avg_pts_con:.0f} puntos promedio<br>
         • Goles encajados LaLiga: +{avg_enc_con-avg_enc_sin:.0f} por temporada<br>
         • Goles encajados UCL: +{avg_ucl_enc_con-avg_ucl_enc_sin:.0f} por temporada<br>
         • Champions: 2 cuartos de final consecutivos vs. 1 campeonato
@@ -608,13 +587,13 @@ with tab4:
 <div style="background:#FFF5F5; border-left:4px solid {ROJO};
             border-radius:6px; padding:1.2rem 1.5rem;">
     <p style="color:{ROJO}; font-weight:800; font-size:0.95rem; margin:0 0 0.4rem 0;">
-        La leccion para cualquier club
+        La lección para cualquier club
     </p>
     <p style="color:#1A202C; font-size:0.88rem; margin:0; line-height:1.6;">
         Antes de fichar una estrella, diagnostica correctamente el problema.
         Un fichaje brillante que resuelve la pregunta equivocada no solo no ayuda —
         puede romper lo que ya funcionaba.
-        <strong>Los datos no mienten: el Madrid era mejor antes de Mbappe.</strong>
+        <strong>Los datos no mienten: el Madrid era mejor antes de Mbappé.</strong>
     </p>
 </div>
 """, unsafe_allow_html=True)
