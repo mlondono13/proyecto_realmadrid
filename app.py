@@ -112,7 +112,6 @@ with tab1:
     # --- LALIGA CONTEXTO ---
     st.markdown("### LaLiga — Evolución del Rendimiento")
     
-    # 1. Puntos en la Liga (Información General)
     st.markdown("#### Puntos en LaLiga")
     fig_pts = go.Figure(go.Bar(
         x=sin['temporada'], y=sin['liga_puntos'],
@@ -123,9 +122,8 @@ with tab1:
     fig_pts.update_layout(LAYOUT_BASE)
     fig_pts.update_layout(height=280)
     st.plotly_chart(fig_pts, use_container_width=True)
-    st.caption("Variable discreta → barras separadas")
+    st.caption("El pico de 95 puntos muestra un equipo que ya rozaba la excelencia en el torneo doméstico.")
 
-    # 2. Desglose de partidos (Complementario, va ABAJO)
     st.markdown("#### Resultados en LaLiga (V / E / D)")
     fig_res = go.Figure()
     fig_res.add_trace(go.Bar(
@@ -143,11 +141,11 @@ with tab1:
     fig_res.update_layout(LAYOUT_BASE)
     fig_res.update_layout(barmode='stack', height=280, yaxis=dict(range=[0, 42]), legend=dict(orientation="h", y=1.12))
     st.plotly_chart(fig_res, use_container_width=True)
-    st.caption("Variable discreta (conteo de partidos) → complementa el puntaje general")
+    st.caption("La consistencia competitiva: una única derrota en toda la campaña 2023-24.")
 
     st.divider()
 
-    # 3. COMPARATIVA DIRECTA: Goles anotados vs Goles encajados (LADO A LADO)
+    # COMPARATIVA DIRECTA: Goles anotados vs Goles encajados (LADO A LADO)
     st.markdown("### LaLiga — Balance de Goles (Comparativo)")
     col_c, col_d = st.columns(2)
 
@@ -175,11 +173,10 @@ with tab1:
         fig_gc.update_layout(height=300, yaxis=dict(range=[0, 105], title="Goles"))
         st.plotly_chart(fig_gc, use_container_width=True)
 
-    st.caption("🟡 2023-24: Temporada campeona  |  Gris: 2022-23")
+    st.caption("Nótese cómo el título de la 2023-24 se cimentó en una defensa histórica (solo 26 goles en contra), no en un aumento drástico de goles a favor.")
     st.divider()
 
     # --- CHAMPIONS CONTEXTO ---
-    # COMPARATIVA DIRECTA: Goles hechos vs Goles recibidos en UCL (LADO A LADO)
     st.markdown("### Champions League — Balance de Goles (Comparativo)")
     col_e, col_f = st.columns(2)
 
@@ -227,34 +224,33 @@ with tab2:
     st.caption("La hipótesis que justificó el fichaje — vs. la realidad de los datos")
     st.divider()
 
-    # COMPARATIVA DIRECTA: Producción goleadora Liga vs UCL (LADO A LADO)
-    st.markdown("### Goles anotados antes y después de Mbappé")
-    col_a, col_b = st.columns(2)
+    # REORGANIZADO: Una gráfica encima de la otra (Complementarias por competición)
+    st.markdown("### Volumen ofensivo histórico y actual")
+    
+    st.markdown("#### LaLiga — Goles anotados")
+    col = color_mbappe(df['mbappe'])
+    fig1 = go.Figure(go.Bar(
+        x=df['temporada'], y=df['liga_goles_a_favor'], marker_color=col,
+        text=df['liga_goles_a_favor'], textposition='outside'
+    ))
+    fig1.add_hline(y=sin['liga_goles_a_favor'].mean(), line_dash="dash", line_color=VERDE,
+                   annotation_text=f"Promedio sin Mbappé: {sin['liga_goles_a_favor'].mean():.0f}")
+    fig1.update_layout(LAYOUT_BASE)
+    fig1.update_layout(height=280, yaxis=dict(range=[0, 105], title="Goles"), showlegend=False)
+    st.plotly_chart(fig1, use_container_width=True)
+    st.caption("La producción de goles en liga se mantiene estable; la llegada del francés no disparó el poder de cara al arco.")
 
-    with col_a:
-        st.markdown("#### LaLiga — Goles anotados")
-        col = color_mbappe(df['mbappe'])
-        fig1 = go.Figure(go.Bar(
-            x=df['temporada'], y=df['liga_goles_a_favor'], marker_color=col,
-            text=df['liga_goles_a_favor'], textposition='outside'
-        ))
-        fig1.add_hline(y=sin['liga_goles_a_favor'].mean(), line_dash="dash", line_color=VERDE,
-                       annotation_text=f"Promedio sin Mbappé: {sin['liga_goles_a_favor'].mean():.0f}")
-        fig1.update_layout(LAYOUT_BASE)
-        fig1.update_layout(height=320, yaxis=dict(range=[0, 105], title="Goles"), showlegend=False)
-        st.plotly_chart(fig1, use_container_width=True)
-
-    with col_b:
-        st.markdown("#### Champions — Goles anotados")
-        fig2 = go.Figure(go.Bar(
-            x=df['temporada'], y=df['ucl_goles_a_favor'], marker_color=color_mbappe(df['mbappe']),
-            text=df['ucl_goles_a_favor'], textposition='outside'
-        ))
-        fig2.add_hline(y=sin['ucl_goles_a_favor'].mean(), line_dash="dash", line_color=VERDE,
-                       annotation_text=f"Promedio sin Mbappé: {sin['ucl_goles_a_favor'].mean():.0f}")
-        fig2.update_layout(LAYOUT_BASE)
-        fig2.update_layout(height=320, yaxis=dict(range=[0, 40], title="Goles"), showlegend=False)
-        st.plotly_chart(fig2, use_container_width=True)
+    st.markdown("#### Champions — Goles anotados")
+    fig2 = go.Figure(go.Bar(
+        x=df['temporada'], y=df['ucl_goles_a_favor'], marker_color=color_mbappe(df['mbappe']),
+        text=df['ucl_goles_a_favor'], textposition='outside'
+    ))
+    fig2.add_hline(y=sin['ucl_goles_a_favor'].mean(), line_dash="dash", line_color=VERDE,
+                   annotation_text=f"Promedio sin Mbappé: {sin['ucl_goles_a_favor'].mean():.0f}")
+    fig2.update_layout(LAYOUT_BASE)
+    fig2.update_layout(height=280, yaxis=dict(range=[0, 40], title="Goles"), showlegend=False)
+    st.plotly_chart(fig2, use_container_width=True)
+    st.caption("Incluso con la adición de una estrella mundial, la efectividad total en Europa se ha quedado por debajo del promedio previo.")
 
     st.caption("🟡 Temporadas con Mbappé  |  Gris: sin Mbappé")
     st.divider()
@@ -299,7 +295,7 @@ with tab3:
 
     st.divider()
     
-    # 1. COMPARATIVA DIRECTA: Goles encajados Liga vs UCL (LADO A LADO)
+    # COMPARATIVA DIRECTA: Goles encajados Liga vs UCL (LADO A LADO)
     st.markdown("### El Impacto Negativo — Goles Encajados (Comparativo)")
     col1, col2 = st.columns(2)
 
@@ -336,10 +332,11 @@ with tab3:
     st.caption("🔴 Temporadas con Mbappé  |  Gris: sin Mbappé")
     st.divider()
 
-    # 2. INFORMACIÓN COMPLEMENTARIA: Fase UCL y Gráfica de Dependencia (UNA ENCIMA DE LA OTRA)
+    # MÉTRICAS COMPLEMENTARIAS (UNA ENCIMA DE LA OTRA)
     st.markdown("### Métricas de Diagnóstico Complementarias")
     
     st.markdown("#### Champions — Fase alcanzada")
+    # SOLUCIÓN: Cambiado a 'Campeon' (sin tilde) para que coincida exactamente con la base de datos
     fases_orden = {'Octavos': 1, 'Cuartos': 2, 'Semifinal': 3, 'Final': 4, 'Campeon': 5}
     semaforo = {1: '#C81D25', 2: '#E07B39', 3: '#F5C518', 4: '#1D9E75', 5: '#155E3B'}
     df['fase_num'] = df['ucl_fase'].map(fases_orden)
@@ -354,7 +351,7 @@ with tab3:
         height=280, showlegend=False
     )
     st.plotly_chart(fig_cl, use_container_width=True)
-    st.caption("Variable ordinal → muestra el retroceso competitivo en Europa")
+    st.caption("Caída en el techo competitivo europeo: de levantar la copa en 2023-24 a estancarse en Cuartos de Final.")
 
     st.markdown("#### Dependencia — % de goles de Mbappé en LaLiga")
     temporadas_con = con['temporada'].tolist()
@@ -375,6 +372,7 @@ with tab3:
     fig_dep.update_layout(LAYOUT_BASE)
     fig_dep.update_layout(barmode='stack', yaxis=dict(range=[0, 90], title="Goles LaLiga"), legend=dict(orientation="h", y=1.12), height=280)
     st.plotly_chart(fig_dep, use_container_width=True)
+    st.caption("Concentración del gol: la excesiva centralización del ataque reduce la impredecibilidad que caracterizaba al bloque anterior.")
 
     st.info(
         f"**Lectura clave:** En 2024-25 Mbappé marcó el **{goles_mbappe[0]/goles_total[0]*100:.0f}%** "
@@ -404,49 +402,10 @@ with tab4:
         'UCL Fase','Eliminado por','Título UCL','Mbappé'
     ]
     st.dataframe(df_show, use_container_width=True, hide_index=True)
+    
     st.divider()
 
-    st.markdown("### Comparativa de medias globales — Sin Mbappé vs. Con Mbappé")
-
-    metricas_comp = ['Puntos LaLiga', 'Goles a favor<br>LaLiga', 'Goles encajados<br>LaLiga',
-                     'Goles a favor<br>Champions', 'Goles encajados<br>Champions']
-    vals_sin = [
-        sin['liga_puntos'].mean(),
-        sin['liga_goles_a_favor'].mean(),
-        sin['liga_goles_en_contra'].mean(),
-        sin['ucl_goles_a_favor'].mean(),
-        sin['ucl_goles_en_contra'].mean()
-    ]
-    vals_con = [
-        con['liga_puntos'].mean(),
-        con['liga_goles_a_favor'].mean(),
-        con['liga_goles_en_contra'].mean(),
-        con['ucl_goles_a_favor'].mean(),
-        con['ucl_goles_en_contra'].mean()
-    ]
-
-    fig_comp = go.Figure()
-    fig_comp.add_trace(go.Bar(
-        y=metricas_comp, x=vals_sin, name='Sin Mbappé (2022-24)',
-        orientation='h', marker_color=ORO,
-        text=[f"{v:.1f}" for v in vals_sin], textposition='outside'
-    ))
-    fig_comp.add_trace(go.Bar(
-        y=metricas_comp, x=vals_con, name='Con Mbappé (2024-26)',
-        orientation='h', marker_color=ROJO,
-        text=[f"{v:.1f}" for v in vals_con], textposition='outside'
-    ))
-    fig_comp.update_layout(
-        barmode='group', plot_bgcolor="white", paper_bgcolor="white",
-        margin=dict(l=20, r=60, t=40, b=30),
-        xaxis=dict(showgrid=True, gridcolor="#E2E8F0", title="Valor promedio"),
-        yaxis=dict(showgrid=False), legend=dict(orientation="h", y=1.1), height=380
-    )
-    st.plotly_chart(fig_comp, use_container_width=True)
-    st.caption("Barras horizontales agrupadas → Resumen macro de las dos eras")
-
-    st.divider()
-
+    # SOLUCIÓN: Eliminada la gráfica confusa. Todo el impacto recae en el análisis estructurado.
     avg_pts_sin  = sin['liga_puntos'].mean()
     avg_pts_con  = con['liga_puntos'].mean()
     avg_enc_sin  = sin['liga_goles_en_contra'].mean()
@@ -456,29 +415,17 @@ with tab4:
 
     st.markdown(f"""
 <div style="background:{AZUL_RM}; border-radius:12px; padding:2rem 2.5rem; margin-bottom:1.5rem;">
-    <p style="color:{ORO}; font-size:1.2rem; font-weight:800; margin:0 0 1rem 0;">
-        No. El Real Madrid no solucionó el problema correcto.
+    <p style="color:{ORO}; font-size:1.3rem; font-weight:800; margin:0 0 1rem 0;">
+        Conclusión: El Real Madrid no solucionó el problema correcto.
     </p>
-    <p style="color:{BLANCO}; font-size:0.97rem; line-height:1.9; margin:0;">
-        <strong style="color:{ORO};">Contexto:</strong>
-        El Madrid llegó a 2024 como el mejor equipo de Europa — 95 puntos en LaLiga,
-        campeón de Champions sin perder un solo partido, y apenas 13 goles encajados en
-        toda la Champions. Era prácticamente perfecto.<br><br>
-        <strong style="color:{ORO};">Necesidad percibida:</strong>
-        La directiva creía que fichar al mejor delantero del mundo los elevaría aún más.
-        Lógica simple: más gol = más títulos. Pero los datos ya mostraban que el gol
-        no era el problema — promediaban {sin['liga_goles_a_favor'].mean():.0f} goles
-        por temporada en LaLiga y {sin['ucl_goles_a_favor'].mean():.0f} en Champions
-        sin Mbappé.<br><br>
-        <strong style="color:{ROJO};">Problema real:</strong>
-        Con Mbappé, los goles encajados en LaLiga subieron de {avg_enc_sin:.0f} a
-        {avg_enc_con:.0f} por temporada. En Champions, de {avg_ucl_enc_sin:.0f} a
-        {avg_ucl_enc_con:.0f}. Los puntos cayeron de {avg_pts_sin:.0f} a {avg_pts_con:.0f}.
-        Y en Europa, dos eliminaciones consecutivas en cuartos de final tras dos finales
-        seguidas sin él. Además, creó un problema nuevo: dependencia extrema.<br><br>
-        <strong style="color:{BLANCO};">Mbappé es un jugador excepcional. Pero fue la respuesta
-        a una pregunta que nadie había formulado. El Madrid no necesitaba más gol —
-        necesitaba mantener la solidez que los había hecho campeones.</strong>
+    <p style="color:#FFFFFF; font-size:1rem; line-height:1.9; margin:0;">
+        <strong style="color:{ORO};">1. Contexto inicial:</strong>
+        El Madrid llegó a 2024 en la cúspide del fútbol mundial: campeón de Liga con 95 puntos y dueño de una Champions League invicta. El ecosistema táctico funcionaba de memoria.<br><br>
+        <strong style="color:{ORO};">2. El error de diagnóstico:</strong>
+        La directiva asumió que añadir la pieza individual más cotizada del mercado resolvería el techo goleador del equipo. Sin embargo, el equipo ya promediaba {sin['liga_goles_a_favor'].mean():.0f} goles por torneo. No faltaban goles.<br><br>
+        <strong style="color:{ROJO};">3. El desajuste estructural:</strong>
+        Los datos evidencian que el verdadero impacto del cambio se sufrió en la fase de contención. Los goles recibidos en LaLiga se dispararon de {avg_enc_sin:.0f} a {avg_enc_con:.0f} anuales, mientras que el ritmo en Europa bajó el listón, sufriendo eliminaciones tempranas en Cuartos de Final.<br><br>
+        <strong style="color:{BLANCO};">Veredicto Final:</strong> El fútbol es un deporte de equilibrios y balance, no de acumulación de nombres. Mbappé fue una solución estelar para un problema ofensivo inexistente, cuyo costo indirecto fue fracturar la solidez defensiva y colectiva que hacía al Real Madrid un equipo imbatible.
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -489,14 +436,12 @@ with tab4:
 <div style="background:#F0FFF4; border-left:4px solid {VERDE};
             border-radius:6px; padding:1.2rem 1.5rem;">
     <p style="color:#276749; font-weight:800; font-size:0.95rem; margin:0 0 0.4rem 0;">
-        Lo que los datos confirman
+        Balance estadístico de la era previa (2022-24)
     </p>
     <p style="color:#1A202C; font-size:0.88rem; margin:0; line-height:1.6;">
-        • Sin Mbappé: 1 Champions, 1 LaLiga, {avg_pts_sin:.0f} puntos promedio<br>
-        • Con Mbappé: 0 Champions, 0 LaLiga, {avg_pts_con:.0f} puntos promedio<br>
-        • Goles encajados LaLiga: +{avg_enc_con-avg_enc_sin:.0f} por temporada<br>
-        • Goles encajados UCL: +{avg_ucl_enc_con-avg_ucl_enc_sin:.0f} por temporada<br>
-        • Champions: 2 cuartos de final consecutivos vs. 1 campeonato
+        • <b>Títulos mayores:</b> 1 Champions League, 1 LaLiga.<br>
+        • <b>Rendimiento regular:</b> {avg_pts_sin:.0f} puntos promedio en Liga.<br>
+        • <b>Solidez atrás:</b> Solo {avg_enc_sin:.0f} goles en contra en el año del doblete.
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -506,13 +451,11 @@ with tab4:
 <div style="background:#FFF5F5; border-left:4px solid {ROJO};
             border-radius:6px; padding:1.2rem 1.5rem;">
     <p style="color:{ROJO}; font-weight:800; font-size:0.95rem; margin:0 0 0.4rem 0;">
-        La lección para cualquier club
+        Lección de Ciencia de Datos aplicada al Deporte
     </p>
     <p style="color:#1A202C; font-size:0.88rem; margin:0; line-height:1.6;">
-        Antes de fichar una estrella, diagnostica correctamente el problema.
-        Un fichaje brillante que resuelve la pregunta equivocada no solo no ayuda —
-        puede romper lo que ya funcionaba.
-        <strong>Los datos no mienten: el Madrid era mejor antes de Mbappé.</strong>
+        Optimizar un indicador que ya está sano (goles a favor) a expensas de descuidar la métrica crítica del éxito anterior (goles en contra) debilita el sistema entero. 
+        <strong>Los datos demuestran que el bloque colectivo superaba la suma de sus individualidades.</strong>
     </p>
 </div>
 """, unsafe_allow_html=True)
