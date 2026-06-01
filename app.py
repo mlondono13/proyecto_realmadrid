@@ -62,7 +62,7 @@ def color_mbappe(df_col, color_con=ORO, color_sin=GRIS):
 st.markdown(f"""
 <div style="background:{AZUL_RM}; border-radius:12px; padding:1.5rem 2rem; margin-bottom:1rem;">
     <p style="color:{GRIS}; font-size:0.8rem; margin:0 0 0.3rem 0;
-              text-transform:uppercase; letter-spacing:2px;">Proyecto · Visualizacion de Datos</p>
+              text-transform:uppercase; letter-spacing:2px;">Proyecto · Visualización de Datos</p>
     <p style="color:{BLANCO}; font-size:1.4rem; font-weight:800; margin:0 0 0.3rem 0;">
         ¿El Real Madrid solucionó el problema correcto al fichar a Mbappé?
     </p>
@@ -79,9 +79,9 @@ tab1, tab2, tab3, tab4 = st.tabs([
     "🏆  El veredicto"
 ])
 
-# ══════════════════════════════════════════════════════════════════════════
+# ==========================================================================
 # TAB 1 — CONTEXTO
-# ══════════════════════════════════════════════════════════════════════════
+# ==========================================================================
 with tab1:
     st.subheader("El Madrid antes de Mbappé")
     st.caption("2022-23 y 2023-24 — el equipo que recibió al francés")
@@ -122,7 +122,8 @@ with tab1:
             textposition='outside',
             hovertemplate="<b>%{x}</b><br>%{y} puntos<extra></extra>"
         ))
-        fig_pts.update_layout(**LAYOUT_BASE, height=300)
+        fig_pts.update_layout(LAYOUT_BASE)
+        fig_pts.update_layout(height=300)
         st.plotly_chart(fig_pts, use_container_width=True)
         st.caption("Variable discreta → barras separadas")
 
@@ -147,8 +148,8 @@ with tab1:
             textposition='inside', textfont_color='white',
             hovertemplate="<b>%{x}</b><br>Derrotas: %{y}<extra></extra>"
         ))
+        fig_res.update_layout(LAYOUT_BASE)
         fig_res.update_layout(
-            **LAYOUT_BASE,
             barmode='stack', height=300,
             yaxis=dict(range=[0, 42], showgrid=True, gridcolor="#E2E8F0", title="Partidos"),
             legend=dict(orientation="h", y=1.12)
@@ -173,8 +174,9 @@ with tab1:
                          line_color=VERDE, line_width=2,
                          annotation_text=f"Promedio: {sin['liga_goles_a_favor'].mean():.0f}",
                          annotation_position="top left")
+        fig_gf.update_layout(LAYOUT_BASE)
         fig_gf.update_layout(
-            **LAYOUT_BASE, height=300,
+            height=300,
             yaxis=dict(range=[0, 105], showgrid=True, gridcolor="#E2E8F0", title="Goles")
         )
         st.plotly_chart(fig_gf, use_container_width=True)
@@ -191,13 +193,14 @@ with tab1:
                          line_color=VERDE, line_width=2,
                          annotation_text=f"Promedio: {sin['liga_goles_en_contra'].mean():.0f}",
                          annotation_position="top left")
+        fig_gc.update_layout(LAYOUT_BASE)
         fig_gc.update_layout(
-            **LAYOUT_BASE, height=300,
+            height=300,
             yaxis=dict(range=[0, 105], showgrid=True, gridcolor="#E2E8F0", title="Goles")
         )
         st.plotly_chart(fig_gc, use_container_width=True)
 
-    st.caption("区域 2023-24: Temporada campeona  |  Gris: 2022-23")
+    st.caption("🟡 2023-24: Temporada campeona  |  Gris: 2022-23")
     st.divider()
 
     st.markdown("### Champions League — Rendimiento antes del fichaje")
@@ -215,8 +218,9 @@ with tab1:
                               line_color=VERDE, line_width=2,
                               annotation_text=f"Promedio: {sin['ucl_goles_a_favor'].mean():.0f}",
                               annotation_position="top left")
+        fig_ucl_gf.update_layout(LAYOUT_BASE)
         fig_ucl_gf.update_layout(
-            **LAYOUT_BASE, height=300,
+            height=300,
             yaxis=dict(range=[0, 35], showgrid=True, gridcolor="#E2E8F0", title="Goles")
         )
         st.plotly_chart(fig_ucl_gf, use_container_width=True)
@@ -233,8 +237,9 @@ with tab1:
                               line_color=VERDE, line_width=2,
                               annotation_text=f"Promedio: {sin['ucl_goles_en_contra'].mean():.0f}",
                               annotation_position="top left")
+        fig_ucl_gc.update_layout(LAYOUT_BASE)
         fig_ucl_gc.update_layout(
-            **LAYOUT_BASE, height=300,
+            height=300,
             yaxis=dict(range=[0, 35], showgrid=True, gridcolor="#E2E8F0", title="Goles")
         )
         st.plotly_chart(fig_ucl_gc, use_container_width=True)
@@ -251,9 +256,9 @@ with tab1:
 """, unsafe_allow_html=True)
 
 
-# ══════════════════════════════════════════════════════════════════════════
+# ==========================================================================
 # TAB 2 — ¿HABÍA PROBLEMA DE GOL?
-# ══════════════════════════════════════════════════════════════════════════
+# ==========================================================================
 with tab2:
     st.subheader("¿El Real Madrid tenía un problema de gol?")
     st.caption("La hipótesis que justificó el fichaje — vs. la realidad de los datos")
@@ -273,8 +278,9 @@ with tab2:
                        line_color=VERDE, line_width=2,
                        annotation_text=f"Promedio sin Mbappé: {sin['liga_goles_a_favor'].mean():.0f}",
                        annotation_position="top left")
+        fig1.update_layout(LAYOUT_BASE)
         fig1.update_layout(
-            **LAYOUT_BASE, height=320,
+            height=320,
             yaxis=dict(range=[0, 105], showgrid=True, gridcolor="#E2E8F0", title="Goles"),
             showlegend=False
         )
@@ -292,8 +298,9 @@ with tab2:
                        line_color=VERDE, line_width=2,
                        annotation_text=f"Promedio sin Mbappé: {sin['ucl_goles_a_favor'].mean():.0f}",
                        annotation_position="top left")
+        fig2.update_layout(LAYOUT_BASE)
         fig2.update_layout(
-            **LAYOUT_BASE, height=320,
+            height=320,
             yaxis=dict(range=[0, 40], showgrid=True, gridcolor="#E2E8F0", title="Goles"),
             showlegend=False
         )
@@ -325,9 +332,9 @@ with tab2:
 """, unsafe_allow_html=True)
 
 
-# ══════════════════════════════════════════════════════════════════════════
+# ==========================================================================
 # TAB 3 — LO QUE PASÓ DESPUÉS
-# ══════════════════════════════════════════════════════════════════════════
+# ==========================================================================
 with tab3:
     st.subheader("Lo que cambió con Mbappé")
     st.caption("Goles encajados, rendimiento en Champions y dependencia individual")
@@ -366,8 +373,9 @@ with tab3:
             ax=60, ay=-50, font=dict(color=ROJO, size=10),
             bgcolor="#FFF5F5", bordercolor=ROJO, borderwidth=1
         )
+        fig_enc.update_layout(LAYOUT_BASE)
         fig_enc.update_layout(
-            **LAYOUT_BASE, height=320,
+            height=320,
             yaxis=dict(range=[0, 50], showgrid=True, gridcolor="#E2E8F0", title="Goles encajados"),
             showlegend=False
         )
@@ -385,8 +393,9 @@ with tab3:
                               line_color=VERDE, line_width=2,
                               annotation_text=f"Promedio sin Mbappé: {sin['ucl_goles_en_contra'].mean():.0f}",
                               annotation_position="top left")
+        fig_ucl_enc.update_layout(LAYOUT_BASE)
         fig_ucl_enc.update_layout(
-            **LAYOUT_BASE, height=320,
+            height=320,
             yaxis=dict(range=[0, 28], showgrid=True, gridcolor="#E2E8F0", title="Goles encajados"),
             showlegend=False
         )
@@ -408,8 +417,8 @@ with tab3:
             marker_color=col_cl, text=df['ucl_fase'], textposition='outside',
             hovertemplate="<b>%{x}</b><br>%{text}<extra></extra>"
         ))
+        fig_cl.update_layout(LAYOUT_BASE)
         fig_cl.update_layout(
-            **LAYOUT_BASE,
             yaxis=dict(
                 tickvals=[1, 2, 3, 4, 5],
                 ticktext=['Octavos', 'Cuartos', 'Semifinal', 'Final', 'Campeón'],
@@ -443,8 +452,8 @@ with tab3:
             textposition='inside',
             hovertemplate="<b>%{x}</b><br>Resto: %{y} goles<extra></extra>"
         ))
+        fig_dep.update_layout(LAYOUT_BASE)
         fig_dep.update_layout(
-            **LAYOUT_BASE,
             barmode='stack',
             yaxis=dict(range=[0, 90], showgrid=True, gridcolor="#E2E8F0", title="Goles LaLiga"),
             legend=dict(orientation="h", y=1.12),
@@ -459,9 +468,9 @@ with tab3:
     )
 
 
-# ══════════════════════════════════════════════════════════════════════════
+# ==========================================================================
 # TAB 4 — EL VEREDICTO
-# ══════════════════════════════════════════════════════════════════════════
+# ==========================================================================
 with tab4:
     st.subheader("El veredicto")
     st.caption("Contexto → Necesidad → Problema → Solución")
